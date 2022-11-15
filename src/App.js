@@ -17,25 +17,29 @@ const Scrabble = () => {
   const buildTileMap = (tiles) => {
     const tilesMap = new Map();
     tiles.split('').forEach((tile) => {
+      // O(m) where m is number of characters
       if (tilesMap.has(tile)) {
-        tilesMap.set(tile, tilesMap.get(tile) + 1);
+        tilesMap.set(tile, tilesMap.get(tile) + 1); // O(1)
       } else {
-        tilesMap.set(tile, 1);
+        tilesMap.set(tile, 1); // O(1)
       }
     });
 
     return tilesMap;
-  }
+  };
 
+  /**
+   * Time complexity: O(m + kn), where m is number of characters available, n is the list of words and k is the average word size
+   * @param {*} event
+   */
   const handleButtonClick = (event) => {
     let found = '';
     let wordList = words.split(',');
     const tilesMap = buildTileMap(tiles);
     let maxLength = 0;
 
-    
-
     wordList.forEach((word) => {
+      // O(n*k), where n is number of words, k is word length
       const auxTiles = new Map(tilesMap);
       if (word.length < maxLength) {
         return;
@@ -44,9 +48,10 @@ const Scrabble = () => {
       let canWrite = true;
 
       word.split('').every((character) => {
-        const numTilesLeft = auxTiles.get(character);
+        // Worst case O(k), where k is word length
+        const numTilesLeft = auxTiles.get(character); // O(1)
         if (numTilesLeft !== undefined && numTilesLeft > 0) {
-          auxTiles.set(character, auxTiles.get(character) - 1);
+          auxTiles.set(character, auxTiles.get(character) - 1); // O(1)
           return true;
         }
         canWrite = false;
@@ -66,9 +71,9 @@ const Scrabble = () => {
 
         found += word;
       }
-
-      setResult(found);
     });
+
+    setResult(found);
   };
 
   return (
